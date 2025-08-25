@@ -1,0 +1,9 @@
+.icon {
+    border-color: #c120ff;
+    color: #c120ff; /* 通过 color 控制 */
+    fill: currentColor; /* 继承 color 的值 */
+}
+
+.icon:hover {
+    color: #ffcd47; /* 悬停时变色 */
+}
