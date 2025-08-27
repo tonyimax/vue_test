@@ -2,7 +2,8 @@
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
 
-import { ref } from 'vue'
+import { ref,onMounted } from 'vue'
+import axios from 'axios';
 
 // 声明响应式变量
 const count = ref(0)
@@ -13,8 +14,36 @@ const isActive = ref(false)
 console.log(count.value) // 0
 count.value++ // 修改值
 
+const clientIp=ref("正在获取IP...");
+
+defineProps({
+  ip_field: {
+    type: String,
+    required: true,
+  },
+})
 // 在模板中自动解包，不需要 .value
 // <div>{{ count }}</div>
+
+const getIp = async () => {
+  try {
+    const response = await axios.get('/ip');
+    clientIp.value = response.data.ip;
+    document.title="网站来自:"+clientIp.value;
+    console.log(clientIp.value);
+  } catch (error) {
+    console.error('获取IP失败:', error);
+    clientIp.value = '获取失败';
+  }
+}
+
+
+
+// 生命周期钩子
+onMounted(() => {
+  getIp();
+});
+
 </script>
 
 <template>
@@ -22,7 +51,10 @@ count.value++ // 修改值
     <img alt="Vue logo" class="logo" src="./assets/RaspberryPi.png" width="125" height="125" />
 
     <div class="wrapper">
-      <HelloWorld msg="恭喜你，你做到了!" />
+      <HelloWorld v-bind:msg="'服务器IP:'+clientIp" />
+      <hello-world :msg="clientIp" />
+
+      <p>服务器IP：{{ clientIp }}</p>
       <div id="app">
         <button @click="count++">
           {{message}}: {{ count }}

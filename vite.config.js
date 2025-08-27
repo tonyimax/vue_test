@@ -15,4 +15,13 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+    server: {
+        proxy: {
+            '/ip': {
+                target: 'https://jsonip.com',
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/ip/, '')
+            }
+        }
+    }
 })
